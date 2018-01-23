@@ -68,6 +68,14 @@ function flipCard(target) {
   target.classList.toggle("show");
 }
 
+// Marks two "open" cards as matching and sets the appropriate classes.
+function matchCards(card1, card2) {
+  flipCard(card1);
+  card1.classList.add("match");
+  flipCard(card2);
+  card2.classList.add("match");
+}
+
 // Does what it says. Increments the counter for moves, and displays the new value on the page.
 function incrementMoveCounter() {
   movesCounter.innerText = ++numMoves;
