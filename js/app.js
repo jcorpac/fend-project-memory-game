@@ -67,6 +67,11 @@ function flipCard(target) {
   target.classList.toggle("open");
   target.classList.toggle("show");
 }
+
+// Does what it says. Increments the counter for moves, and displays the new value on the page.
+function incrementMoveCounter() {
+  movesCounter.innerText = ++numMoves;
+}
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
