@@ -145,8 +145,6 @@ function incrementMoveCounter() {
 
 // Compare the icon classes of two cards.
 function compareCards(card1, card2) {
-  console.log(`Card 1: ${card1.firstChild.classList[1]}`);
-  console.log(`Card 2: ${card2.firstChild.classList[1]}`);
   return card1.firstChild.classList[1] == card2.firstChild.classList[1];
 }
 
