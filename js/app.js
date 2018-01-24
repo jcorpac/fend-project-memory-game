@@ -96,6 +96,7 @@ function resetGame(){
   cardTable.innerHTML = "";
   buildCardTable(cardArray);
   flippedCard = null;
+  matchedCards = [];
   // Reset number of moves to 0
   numMoves = 0;
   movesCounter.innerText = numMoves;
