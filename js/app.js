@@ -4,6 +4,8 @@ let numMatches = 0;
 // Important UI elements
 const movesCounter = document.querySelector("span.moves");
 const cardTable = document.querySelector("ul.deck");
+const restartButton = document.querySelector("div.restart");
+const starPanel = document.querySelector("ul.stars");
 
 // Initial state of the game has 0 moves.
 let numMoves = 0;
@@ -31,6 +33,10 @@ function buildCardTable(cardArray) {
   for (let card of cardArray) {
     newCard = document.createElement("li");
     newCard.className = "card";
+    // Adds event listener to the card.
+    // Less efficient than adding to the deck or table, but prevents cardValue object being accepted as target.
+    newCard.addEventListener("click", cardClicked);
+
     cardValue = document.createElement("i");
     cardValue.className = `fa ${card}`;
     newCard.appendChild(cardValue);
@@ -65,6 +71,9 @@ function resetGame(){
   movesCounter.innerText = numMoves;
 }
 
+// Add restart functionality to restart button.
+restartButton.addEventListener("click", resetGame);
+
 // Toggles "open" and "show" classes for a card to flip it face-up or face-down
 function flipCard(target) {
   target.classList.toggle("open");
@@ -93,3 +102,6 @@ function incrementMoveCounter() {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+function cardClicked(event) {
+  flipCard(event.target);
+}
