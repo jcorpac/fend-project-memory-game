@@ -1,5 +1,7 @@
 // Variables to track for the Game
+const maxStars = 3;
 let numMatches = 0;
+let numStars = maxStars;
 
 // Important UI elements
 const movesCounter = document.querySelector("span.moves");
@@ -14,7 +16,7 @@ movesCounter.innerText = numMoves;
 /*
  * Create a list that holds all of your cards
  */
-const cardFaces = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"];
+const cardFaces = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"].sort();
 let cardArray = cardFaces.concat(cardFaces);
 /*
  * Display the cards on the page
@@ -59,16 +61,44 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
+function updateStars(numStars) {
+  const starBox = document.createDocumentFragment();
+  // Add filled-in stars
+  for (let counter = 0; counter < numStars; counter++){
+    let newStar = document.createElement('li');
+    let fullStar = document.createElement('i');
+    fullStar.classList = "fa fa-star";
+    newStar.appendChild(fullStar);
+    starBox.appendChild(newStar);
+  }
+  // Add empty stars
+  for (counter = numStars; counter < maxStars; counter++){
+    let newStar = document.createElement('li');
+    let fullStar = document.createElement('i');
+    fullStar.classList = "fa fa-star-o";
+    newStar.appendChild(fullStar);
+    starBox.appendChild(newStar);
+  }
+  starPanel.innerHTML = "";
+  starPanel.appendChild(starBox);
+}
+// Automatically set full stars at the start of a new game.
+updateStars(maxStars);
+
 // Reset the state of the game for another round.
 function resetGame(){
+  // Set up a new card table.
   cardTable.innerHTML = "";
   buildCardTable(cardArray);
+  // Reset number of moves to 0
   numMoves = 0;
   movesCounter.innerText = numMoves;
+  // Reset number of stars to maxStars.
+  numStars = maxStars;
+  updateStars(numStars);
 }
 
 // Add restart functionality to restart button.
@@ -90,8 +120,24 @@ function matchCards(card1, card2) {
 
 // Does what it says. Increments the counter for moves, and displays the new value on the page.
 function incrementMoveCounter() {
-  movesCounter.innerText = ++numMoves;
+  numMoves++;
+  switch (numMoves){
+    case 15:
+      numStars = 2;
+      updateStars(numStars);
+      break;
+    case 20:
+      numStars = 1;
+      updateStars(numStars);
+      break;
+    case 25:
+      numStars = 0;
+      updateStars(numStars);
+      break;
+  }
+  movesCounter.innerText = numMoves;
 }
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
