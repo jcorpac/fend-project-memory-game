@@ -121,16 +121,17 @@ function matchCards(card1, card2) {
 // Does what it says. Increments the counter for moves, and displays the new value on the page.
 function incrementMoveCounter() {
   numMoves++;
+  const numTotalCards = cardFaces.length * 2;
   switch (numMoves){
-    case 15:
+    case numTotalCards:       // Two attempts per card type
       numStars = 2;
       updateStars(numStars);
       break;
-    case 20:
+    case numTotalCards * 1.25: // Three attempts per card type
       numStars = 1;
       updateStars(numStars);
       break;
-    case 25:
+    case numTotalCards * 1.5:   // Four attempts per card type
       numStars = 0;
       updateStars(numStars);
       break;
