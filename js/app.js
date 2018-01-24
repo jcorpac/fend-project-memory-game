@@ -2,6 +2,8 @@
 const maxStars = 3;
 let numMatches = 0;
 let numStars = maxStars;
+let flippedCard = null;
+let matchedCards = [];
 
 // Important UI elements
 const movesCounter = document.querySelector("span.moves");
@@ -37,7 +39,7 @@ function buildCardTable(cardArray) {
     newCard.className = "card";
     // Adds event listener to the card.
     // Less efficient than adding to the deck or table, but prevents cardValue object being accepted as target.
-    newCard.addEventListener("click", cardClicked);
+    newCard.addEventListener("click", cardClicked, true);
 
     cardValue = document.createElement("i");
     cardValue.className = `fa ${card}`;
@@ -93,6 +95,7 @@ function resetGame(){
   // Set up a new card table.
   cardTable.innerHTML = "";
   buildCardTable(cardArray);
+  flippedCard = null;
   // Reset number of moves to 0
   numMoves = 0;
   movesCounter.innerText = numMoves;
@@ -112,9 +115,10 @@ function flipCard(target) {
 
 // Marks two "open" cards as matching and sets the appropriate classes.
 function matchCards(card1, card2) {
+  // Flip the flipped card back to remove "open" and "show" classes.
   flipCard(card1);
+  // Add "match" class to cards.
   card1.classList.add("match");
-  flipCard(card2);
   card2.classList.add("match");
 }
 
@@ -139,6 +143,22 @@ function incrementMoveCounter() {
   movesCounter.innerText = numMoves;
 }
 
+// Compare the icon classes of two cards.
+function compareCards(card1, card2) {
+  console.log(`Card 1: ${card1.firstChild.classList[1]}`);
+  console.log(`Card 2: ${card2.firstChild.classList[1]}`);
+  return card1.firstChild.classList[1] == card2.firstChild.classList[1];
+}
+
+// Display end-game screen
+// If the user wants to play again, reset the game.
+function gameOver() {
+  const message = `Game Over\nYou finished the game in ${numMoves} moves and earned ${numStars} out of ${maxStars} stars!\nWould you like to play again?`;
+  if (window.confirm(message)) {
+    resetGame();
+  }
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -150,5 +170,38 @@ function incrementMoveCounter() {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 function cardClicked(event) {
-  flipCard(event.target);
+  const clickedCard = event.target;
+  // If the card is already open, or matched, or is not a card (such as a card face icon), then ignore the click.
+  if (clickedCard.classList.contains('open') ||
+      clickedCard.classList.contains('match') ||
+      !clickedCard.classList.contains('card')) {
+    return;
+  }
+  // First card flip of a move.
+  if (flippedCard == null){
+    flipCard(clickedCard);
+    flippedCard = clickedCard;
+  } else {    // Second card flip of a move
+    flipCard(clickedCard);
+    incrementMoveCounter();   // Move is valid, so increment the counter
+    if (compareCards(flippedCard, clickedCard)) {   // If the cards match
+      // Set cards to match class.
+      matchCards(clickedCard, flippedCard);
+      // Remove comparison card
+      flippedCard = null;
+      // Add the card's face value to the list of matched cards.
+      matchedCards.push(clickedCard.firstChild.classList[1]);
+      // Check to see if all cards are matched
+      if (matchedCards.length == cardFaces.length) {
+        window.setTimeout(gameOver, 50);
+      }
+    } else {    // If the cards do not match.
+      // Wait 1 second, then flip the cards back and end the turn.
+      window.setTimeout(function() {
+        flipCard(clickedCard);
+        flipCard(flippedCard);
+        flippedCard = null;
+      }, 500);
+    }
+  }
 }
