@@ -1,6 +1,5 @@
 // Variables to track for the Game
 const maxStars = 3;
-let numMatches = 0;
 let numStars = maxStars;
 let flippedCard = null;
 let matchedCards = [];
@@ -126,17 +125,17 @@ function matchCards(card1, card2) {
 // Does what it says. Increments the counter for moves, and displays the new value on the page.
 function incrementMoveCounter() {
   numMoves++;
-  const numTotalCards = cardFaces.length * 2;
+  const numCardFaces = cardFaces.length;
   switch (numMoves){
-    case numTotalCards:       // Two attempts per card type
+    case Math.round(numCardFaces * 2):   // Two attempts per card type
       numStars = 2;
       updateStars(numStars);
       break;
-    case numTotalCards * 1.25: // Three attempts per card type
+    case Math.round(numCardFaces * 2.5): // 2.5 attempts per card type
       numStars = 1;
       updateStars(numStars);
       break;
-    case numTotalCards * 1.5:   // Four attempts per card type
+    case Math.round(numCardFaces * 3):   // Three attempts per card type
       numStars = 0;
       updateStars(numStars);
       break;
@@ -152,7 +151,9 @@ function compareCards(card1, card2) {
 // Display end-game screen
 // If the user wants to play again, reset the game.
 function gameOver() {
-  const message = `Game Over\nYou finished the game in ${numMoves} moves and earned ${numStars} out of ${maxStars} stars!\nWould you like to play again?`;
+  const message = `Game Over
+  You finished the game in ${numMoves} moves and earned ${numStars} out of ${maxStars} stars!
+  Would you like to play again?`;
   if (window.confirm(message)) {
     resetGame();
   }
@@ -176,12 +177,13 @@ function cardClicked(event) {
       !clickedCard.classList.contains('card')) {
     return;
   }
+
+  // Flip the clicked card.
+  flipCard(clickedCard);
   // First card flip of a move.
   if (flippedCard == null){
-    flipCard(clickedCard);
     flippedCard = clickedCard;
   } else {    // Second card flip of a move
-    flipCard(clickedCard);
     incrementMoveCounter();   // Move is valid, so increment the counter
     if (compareCards(flippedCard, clickedCard)) {   // If the cards match
       // Set cards to match class.
@@ -192,10 +194,11 @@ function cardClicked(event) {
       matchedCards.push(clickedCard.firstChild.classList[1]);
       // Check to see if all cards are matched
       if (matchedCards.length == cardFaces.length) {
+        // If all card faces have been found, then the game is over.
         window.setTimeout(gameOver, 50);
       }
     } else {    // If the cards do not match.
-      // Wait 1 second, then flip the cards back and end the turn.
+      // Wait 500ms, then flip the cards back and end the turn.
       window.setTimeout(function() {
         flipCard(clickedCard);
         flipCard(flippedCard);
