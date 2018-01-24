@@ -1,17 +1,19 @@
 // Variables to track for the Game
 let numMatches = 0;
 
+// Important UI elements
+const movesCounter = document.querySelector("span.moves");
+const cardTable = document.querySelector("ul.deck");
+
 // Initial state of the game has 0 moves.
 let numMoves = 0;
-const movesCounter = document.querySelector("span.moves");
 movesCounter.innerText = numMoves;
 
 /*
  * Create a list that holds all of your cards
  */
- const cardFaces = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"];
- let cardArray = cardFaces.concat(cardFaces);
-
+const cardFaces = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"];
+let cardArray = cardFaces.concat(cardFaces);
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -21,7 +23,6 @@ movesCounter.innerText = numMoves;
 function buildCardTable(cardArray) {
   // Shuffle card array from its current state.
   cardArray = shuffle(cardArray);
-  const cardTable = document.querySelector("ul.deck");
   // Create a temporary fragment to store cards before adding them to the table.
   const cardDeck = document.createDocumentFragment();
   // Reusable card declarations.
@@ -54,6 +55,14 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+// Reset the state of the game for another round.
+function resetGame(){
+  cardTable.innerHTML = "";
+  buildCardTable(cardArray);
+  numMoves = 0;
+  movesCounter.innerText = numMoves;
 }
 
 // Toggles "open" and "show" classes for a card to flip it face-up or face-down
