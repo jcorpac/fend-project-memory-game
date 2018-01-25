@@ -3,8 +3,8 @@
 ## Table of Contents
 
 * [Project Attribution](#attribution)
-* [Running on a Local Server](#Running-on-a-Local-Server)
-* [Running from a Docker Container](#Run-from-a-Docker-Container)
+* [Running on a Local Server](#running-on-a-local-server)
+* [Running from a Docker Container](#run-from-a-docker-container)
 
 ## Project Attribution
 
