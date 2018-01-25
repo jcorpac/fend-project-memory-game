@@ -4,6 +4,7 @@ let numStars = maxStars;
 let flippedCard = null;
 let matchedCards = [];
 let numSeconds = 0;
+let counterId = null;
 
 // Important UI elements
 const movesCounter = document.querySelector("span.moves");
@@ -15,11 +16,6 @@ const timerPanel = document.querySelector("span.timer");
 // Initial state of the game has 0 moves.
 let numMoves = 0;
 movesCounter.innerText = numMoves;
-
-// Start a counter for the number of seconds since the game has started.
-let counterId = setInterval(function(){
-  timerPanel.innerText = `${++numSeconds} seconds`;
-}, 1000);
 
 /*
  * Create a list that holds all of your cards
@@ -111,11 +107,9 @@ function resetGame(){
   updateStars(numStars);
   // Reset the time counter to -1 (will be updated to 0 seconds at the next tick)
   clearInterval(counterId);
+  counterId = null;
   timerPanel.innerText = '0 seconds';
   numSeconds = 0;
-  counterId = setInterval(function(){   // Set up a new counter,
-    timerPanel.innerText = `${++numSeconds} seconds`;
-  }, 1000);
 }
 
 // Add restart functionality to restart button.
@@ -147,10 +141,6 @@ function incrementMoveCounter() {
       break;
     case Math.round(numCardFaces * 2.5): // 2.5 attempts per card type
       numStars = 1;
-      updateStars(numStars);
-      break;
-    case Math.round(numCardFaces * 3):   // Three attempts per card type
-      numStars = 0;
       updateStars(numStars);
       break;
   }
@@ -193,6 +183,13 @@ function cardClicked(event) {
       clickedCard.classList.contains('match') ||
       !clickedCard.classList.contains('card')) {
     return;
+  }
+
+  if(counterId == null) {
+    // Start a counter for the number of seconds since the game has started.
+    counterId = setInterval(function(){
+      timerPanel.innerText = `${++numSeconds} seconds`;
+    }, 1000);
   }
 
   // Flip the clicked card.
