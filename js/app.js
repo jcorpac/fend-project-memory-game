@@ -3,16 +3,23 @@ const maxStars = 3;
 let numStars = maxStars;
 let flippedCard = null;
 let matchedCards = [];
+let numSeconds = 0;
 
 // Important UI elements
 const movesCounter = document.querySelector("span.moves");
 const cardTable = document.querySelector("ul.deck");
 const restartButton = document.querySelector("div.restart");
 const starPanel = document.querySelector("ul.stars");
+const timerPanel = document.querySelector("span.timer");
 
 // Initial state of the game has 0 moves.
 let numMoves = 0;
 movesCounter.innerText = numMoves;
+
+// Start a counter for the number of seconds since the game has started.
+let counterId = setInterval(function(){
+  timerPanel.innerText = `${++numSeconds} seconds`;
+}, 1000);
 
 /*
  * Create a list that holds all of your cards
@@ -102,6 +109,13 @@ function resetGame(){
   // Reset number of stars to maxStars.
   numStars = maxStars;
   updateStars(numStars);
+  // Reset the time counter to -1 (will be updated to 0 seconds at the next tick)
+  clearInterval(counterId);
+  timerPanel.innerText = '0 seconds';
+  numSeconds = 0;
+  counterId = setInterval(function(){   // Set up a new counter,
+    timerPanel.innerText = `${++numSeconds} seconds`;
+  }, 1000);
 }
 
 // Add restart functionality to restart button.
@@ -151,11 +165,14 @@ function compareCards(card1, card2) {
 // Display end-game screen
 // If the user wants to play again, reset the game.
 function gameOver() {
+  // Stop the counter and display the end-game message.
+  clearInterval(counterId);
   const message = `Game Over
   You finished the game in ${numMoves} moves and earned ${numStars} out of ${maxStars} stars!
+  You found all of the cards in ${numSeconds} seconds!
   Would you like to play again?`;
-  if (window.confirm(message)) {
-    resetGame();
+  if (window.confirm(message)) {  // If the user wants play again
+    resetGame();  // and reset the game.
   }
 }
 
